@@ -165,8 +165,8 @@
     <!-- Sidebar -->
     <aside class="sidebar">
         <ul class="sidebar-menu">
-            <li><a href="staffinventory.php"><i class="fas fa-boxes"></i>Inventory</a></li>
-            <li><a href="#stafftask.php"><i class="fas fa-tasks"></i>Tasks</a></li>
+         <li><a href="StaffInventory.php"><i class="fas fa-boxes"></i>Inventory</a></li>
+            <li><a href="#StaffTasks.php"><i class="fas fa-tasks"></i>Tasks</a></li>
             <li><a href="#"><i class="fa-solid fa-hotel"></i>Check in/out</a></li>
         </ul>
         <div class="logout">
