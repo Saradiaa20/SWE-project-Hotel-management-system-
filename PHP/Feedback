@@ -1,0 +1,407 @@
+<?php
+session_start();
+?>
+
+
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+  <head>
+    <meta charset="utf-8">
+    <title>Contact Form</title>
+    <!-- <link rel="stylesheet" href="style-feedback.css"> -->
+    <meta name="viewport" content="width=device-width,initial-scale=1.0">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <style>
+
+*{
+    margin: 0px;
+    padding: 0px;
+    box-sizing: border-box;
+    font-family: 'Source Sans Pro', sans-serif;
+    text-decoration: none;
+    color: white;
+  }
+  
+  body{
+    background-color: #f1eee7;
+    
+  }                                            
+                                                  
+  
+  form{
+    background-color: #9B7848 ;  
+    width: 640px;
+    margin: 50px auto;
+    max-width: 97%;
+    border-radius: 4px;
+    padding: 55px 30px;
+  }
+  
+  form .title h2{
+    letter-spacing: 6px;
+    border-bottom: 1px solid white;
+    display: inline-block;
+    padding-bottom: 8px;
+    margin-bottom: 32px;
+  }
+  
+  form .half{
+    display: flex;
+    justify-content: space-between;
+  }
+  
+  form .half .item{
+    display: flex;
+    flex-direction: column;
+    margin-bottom: 24px;
+    width: 48%;
+  }
+  
+  form label{
+    display: block;
+    font-size: 13px;
+    letter-spacing: 3.5px;
+    margin-bottom: 16px;
+  }
+  
+  form .half .item input{
+    border-radius: 4px;
+    border: 1px solid white;
+    outline: 0;
+    padding: 16px;
+    width: 100%;
+    height: 44px;
+    background: transparent;
+    font-size: 17px;
+  }
+  
+  form .full{
+    margin-bottom: 24px;
+  }
+  
+  form .full textarea{
+    background: transparent;
+    border-radius: 4px;
+    border: 1px solid white;
+    outline: 0;
+    padding: 12px 16px;
+    width: 100%;
+    height: 200px;
+    font-size: 17px;
+  }
+  
+  form .action{
+    margin-bottom: 32px;
+  }
+  
+  form .action input{
+    background: transparent;
+    border-radius: 4px;
+    border: 1px solid white;
+    cursor: pointer;
+    font-size: 13px;
+    font-weight: 600;
+    height: 44px;
+    letter-spacing: 3px;
+    outline: 0;
+    padding: 0 20px 0 22px;
+    margin-right: 10px;
+  }
+  
+  form .action input[type="submit"]{
+    background: white;
+    color: black;
+  }
+  
+  
+  
+  @media (max-width: 480px){
+    form .half{
+      flex-direction: column;
+    }
+    form .half .item{
+      width: 100%;
+    }
+    form .action{
+      display: flex;
+      flex-direction: column;
+    }
+    form .action input{
+      margin-bottom: 10px;
+      width: 100%;
+    }
+  }
+
+  
+
+        footer{
+            background: linear-gradient(to right, #9b7848, #c5b394);
+            border-top-left-radius: 100px;
+            padding-bottom: 50px; 
+        }
+
+        footer *{
+            color: white;
+        }
+
+        .f_container{
+            display: flex;
+            justify-content: space-between;
+            padding: 50px 7%;
+        }
+
+        .footer-col{
+            width: 25%;
+        }
+
+        .footer-col h2{
+            font-optical-sizing: 1.7em;
+            text-transform: uppercase;
+            margin-bottom: 20px;
+        }
+
+        p.email{
+            margin: 12px 0px;
+        }
+
+        p.phone{
+            font-size: 15px;
+            font-weight: 400;
+        }
+
+        .footer-col .text-office{
+            margin-bottom: 20px;
+        }
+        .underline{
+            width: 70px;
+            height: 3px;
+            position: relative;
+            background-color: white;
+            border-radius: 3px;
+            overflow: hidden;
+        }
+
+        .underline span{
+            width: 7px;
+            height: 100%;
+            position: absolute;
+            left: 10px;
+            background-color: rgb(63,63,63);
+            border-radius: 3px;
+            animation: moving 1.5s linear infinite;
+        }
+
+        @keyframes moving {
+            0%{
+                left: -20px;
+ }
+            100%{
+                left: 100%;
+            }
+        }
+
+        .footer-col ul{
+            list-style-type: none;
+            padding-top: 10px;
+        }
+
+        .footer-col ul li{
+            margin: 10px;
+        }
+
+        .footer-col form{
+            margin-top: 20px;
+            border-bottom: 1px solid white;
+            padding-bottom: 10px;
+            display: flex;
+        }
+
+        .footer-col form input{
+            width: 70%;
+            background: transparent;
+            border: none;
+            outline: none;
+            padding-left: 10px;
+        }
+
+        .footer-col form i{
+            font-size: 15px;
+        }
+
+        .footer-col .social-icons{
+            margin-top: 20px;
+        }
+
+        .footer-col .social-icons i{
+            padding: 10px;
+            background-color: white;
+            color: #00093c;
+            border-radius: 50%;
+            margin: 5px;
+        }
+
+        .footer-para{
+            max-width: 225px;
+        }
+        .name{
+            margin:-3px;
+        }
+
+        /* Nav bar style */
+.navbar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background-color: #9b7848;
+  padding: 15px;
+  position: sticky;
+  top: 0;
+  z-index: 1000;
+  height: 60px;
+}
+
+.navbar .logo {
+          display: flex; 
+          align-items: center; 
+      }
+
+      .navbar .logo img {
+          width: auto;  
+          height: 70px;  
+          margin-right: 20px; 
+      }
+.navbar nav ul {
+  list-style: none;
+  display: flex;
+}
+
+.navbar nav ul li {
+  margin: 0 10px;
+}
+
+.navbar nav ul li a {
+  color: #fff;
+  text-decoration: none;
+  text-transform: uppercase;
+  padding: 10px 15px;
+  transition: background-color 0.3s ease;
+}
+
+.navbar nav ul li a:hover {
+  color: black;
+  border-radius: 5px;
+}
+
+.user-icon {
+  width: 25px; 
+  height: 25px; 
+  border-radius: 50%; 
+  display: flex;
+  justify-content: center; 
+  align-items: center; 
+  transition: background-color 0.3s ease, color 0.3s ease; 
+  margin-left: 10px; 
+}
+.user-icon:hover {
+background-color: lightgray;
+}
+.user-icon img {
+  width: 100%; /* Make the image fit the circle */
+  height: 100%; 
+  object-fit: cover; /* Ensure the image covers the entire circle */
+}
+    </style>
+  
+  </head>
+  <body>
+  <div class="navbar">
+        <div class="logo">
+        <img src="logo.jpg" alt="logo">
+        </div>
+        <nav>
+            <ul>
+                <li><a href="#">Home</a></li>
+                <li><a href="#">Rooms</a></li>
+                <li><a href="#">Contact us</a></li>
+                <li><a href="#">About</a></li>
+            </ul>
+        </nav>
+        <div class="user-icon">
+        <img src="user.jpg" alt="A person icon">
+
+
+</div>
+    </div>
+    <form action="">
+      <div class="title">
+        <h2>Feedback</h2>
+      </div>
+      <div class="half">
+        <div class="item">
+          <label for="name">First Name</label>
+          <input type="text" id="Lname" required placeholder="First Name" />
+        </div>
+        <div class="item">
+          <label for="name">Last Name</label>
+          <input type="text" id="Fname" required placeholder="Last Name" />
+        </div>
+        
+      </div>
+      <div class="full">
+        <label for="message">Your Feedback</label>
+        <textarea name="" id="feedback"required placeholder="Write your feedback"></textarea>
+      </div>
+      <div class="action">
+        <input type="submit" value = "SEND FEEDBACK">
+        <input type="reset" value = "RESET">
+      </div>
+      
+    </form>
+    <!--footer part-->
+    <footer>
+        <div class="f_container">
+            <div class="footer-col">
+                <h2 class="name">The Royal Palm</h2>
+                <p class="footer-para">Welcome to our luxury hotel, where comfort meets elegance. Enjoy your stay with top-notch facilities and personalized service.</p>
+            </div>
+            <div class="footer-col">
+                <h3 class="text-office">
+                    Contact Us
+                    <div class="underline"><span></span></div>
+                </h3>
+                <p class="email">reservations@theroyalpalm.com</p>
+                <p class="phone">+20 101 234 5678</p>
+            </div>
+            <div class="footer-col">
+                <h3>
+                    Quick Links
+                    <div class="underline"><span></span></div>
+                </h3>
+                <ul>
+                    <li><a href="homepage.php">Home</a></li>
+                    <li><a href="#">Rooms & Suites</a></li>
+                    <li><a href="#">Events</a></li>
+                    <li><a href="#">Contact Us</a></li>
+                </ul>
+            </div>
+            <div class="footer-col">
+                <h3>
+                    Newsletter
+                    <div class="underline"><span></span></div>
+                </h3>
+                <form action="">
+                    <i class="fa-solid fa-envelope"></i>
+                    <input type="text" placeholder="Enter Your Email">
+                    <a href=""><i class="fa-solid fa-arrow-right"></i></a>
+                </form>
+                <div class="social-icons">
+                    <a href="#"><i class="fa-brands fa-facebook"></i></a>
+                    <a href="#"><i class="fa-brands fa-instagram"></i></a>
+                    <a href="#"><i class="fa-brands fa-whatsapp"></i></a>
+                </div>
+            </div>
+        </div>
+    </footer>
+  </body>
+</html>
