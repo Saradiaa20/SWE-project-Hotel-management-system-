@@ -294,6 +294,22 @@
   cursor: pointer;
   padding: 5px;
 }
+::-webkit-scrollbar {
+    width: 10px;
+}
+
+::-webkit-scrollbar-track {
+    background: #f1eee7;
+}
+
+::-webkit-scrollbar-thumb {
+    background: #9B7848;
+    border-radius: 5px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+    background: #1F4A54;
+}
   </style>
 </head>
 <body>
