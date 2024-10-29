@@ -276,16 +276,12 @@
     <!-- Sidebar -->
     <aside class="sidebar">
         <ul class="sidebar-menu">
-            <li><a href="#"><i class="fas fa-home"></i>Home</a></li>
-            <li><a href="#"><i class="fas fa-door-closed"></i>Rooms</a></li>
-            <li><a href="#"><i class="fas fa-users"></i>Guest</a></li>
-            <li><a href="#"><i class="fas fa-user-plus"></i>Staff</a></li>
-            <li><a href="#"><i class="fas fa-boxes"></i>Inventory</a></li>
-            <li><a href="#"><i class="fas fa-tasks"></i>Tasking</a></li>
-        </ul>
-        <div class="logout">
-            <a href="#"><i class="fas fa-sign-out-alt"></i>Logout</a>
-        </div>
+        <li><a href="#"><i class="fas fa-home"></i>Home</a></li>
+      <li><a href="AdminRooms.php"><i class="fas fa-door-closed"></i>Rooms</a></li>
+      <li><a href="Staff/StaffInventory.php"><i class="fas fa-user-plus"></i>Staff</a></li>
+      <li><a href="inventory.php"><i class="fas fa-boxes"></i>Inventory</a></li>
+      <li><a href="AdminTasks.php"><i class="fas fa-tasks"></i>Tasking</a></li>
+      
     </aside>
 
     <!-- Main content -->
