@@ -346,10 +346,12 @@ session_start();
             </ul>
         </nav>
         <div class="user-icon">
-        <img src="user.jpg" alt="A person icon">
+         <a href="profile3.php">
+          <img src="user.jpg" alt="A person icon">
+         </a>
+        </div>
 
-
-</div>
+         
     </div>
     <form action="">
       <div class="title">
