@@ -50,6 +50,8 @@ class RoomController {
             'fo_status' => $request['fo_status'] ?? '',
             'capacity' => $request['capacity'] ?? '',
             'bed_type' => $request['bed_type'] ?? '',
+            'description' => $request['description'] ?? '',
+            'detaileddescription' => $request['detaileddescription'] ?? '', 
             'amenities' => $amenities,
             'roomphotos' => !empty($imagePaths) ? implode(',', $imagePaths) : null
         ];
@@ -137,6 +139,8 @@ public function updateRoom($id, $data) {
             'fo_status' => $data['fo_status'],
             'capacity' => $data['capacity'],
             'bed_type' => $data['bed_type'],
+            'description' => $data['description'],
+            'detaileddescription' => $data['detaileddescription'],
             'amenities' => $amenities,
             'roomphotos' => $photosString
         ];

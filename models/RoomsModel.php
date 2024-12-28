@@ -10,8 +10,9 @@ class Room {
 
     // Create a new room
     public function createRoom($data) {
-        $sql = "INSERT INTO rooms (price, reservation_status, room_type, room_status, return_status, fo_status, capacity, bed_type, amenities, roomphotos)
-                VALUES (:price, :reservation_status, :room_type, :room_status, :return_status, :fo_status, :capacity, :bed_type, :amenities, :roomphotos)";
+        $sql = "INSERT INTO rooms (price, reservation_status, room_type, room_status, return_status, fo_status, capacity, bed_type, amenities, roomphotos, description, detaileddescription)
+                VALUES (:price, :reservation_status, :room_type, :room_status, :return_status, :fo_status, :capacity, :bed_type, :amenities, :roomphotos, :description, :detaileddescription)";
+        
         $stmt = $this->pdo->prepare($sql);
         
         // Bind the parameters
@@ -25,16 +26,18 @@ class Room {
         $stmt->bindParam(':bed_type', $data['bed_type']);
         $stmt->bindParam(':amenities', $data['amenities']);
         $stmt->bindParam(':roomphotos', $data['roomphotos']);
-    
+        $stmt->bindParam(':description', $data['description']);
+        $stmt->bindParam(':detaileddescription', $data['detaileddescription']);
+
         // Try to execute the query
         if ($stmt->execute()) {
             return ['success' => true, 'message' => 'Room created successfully.'];
         } else {
-            // Log the error if execution fails
             error_log("SQL Error: " . implode(" - ", $stmt->errorInfo()));
             return ['success' => false, 'message' => 'Failed to create room.'];
         }
     }
+
 
     // Read all rooms
     public function getAllRooms() {
@@ -63,6 +66,8 @@ class Room {
                 fo_status = :fo_status,
                 capacity = :capacity,
                 bed_type = :bed_type,
+                description=:description,
+                detaileddescription= :detaileddescription,
                 amenities = :amenities";
         
         // Only update photos if new ones were provided
@@ -84,7 +89,10 @@ class Room {
         $stmt->bindParam(':fo_status', $data['fo_status']);
         $stmt->bindParam(':capacity', $data['capacity']);
         $stmt->bindParam(':bed_type', $data['bed_type']);
+        $stmt->bindParam(':description', $data['description']);
+        $stmt->bindParam(':detaileddescription', $data['detaileddescription']);
         $stmt->bindParam(':amenities', $data['amenities']);
+
         
         if (isset($data['roomphotos'])) {
             $stmt->bindParam(':roomphotos', $data['roomphotos']);

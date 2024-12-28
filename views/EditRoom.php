@@ -379,6 +379,16 @@ $roomAmenities = !empty($room['amenities']) ? explode(',', $room['amenities']) :
                 <input type="hidden" name="id" value="<?php echo htmlspecialchars($roomId); ?>">
 
                 <div class="form-group">
+                    <label for="description">Room Description</label>
+                    <input type="text" id="description" name="description" value="<?php echo htmlspecialchars($room['description']); ?>" required>
+                </div>
+
+                <div class="form-group">
+                    <label for="detaileddescription">Detailed Description</label>
+                    <input type="text" id="detaileddescription" name="detaileddescription" value="<?php echo htmlspecialchars($room['detaileddescription']); ?>" required>
+                </div>
+
+                <div class="form-group">
                     <label for="price">Room Price</label>
                     <input type="number" id="price" name="price" value="<?php echo htmlspecialchars($room['price']); ?>" required>
                 </div>
@@ -460,114 +470,249 @@ $roomAmenities = !empty($room['amenities']) ? explode(',', $room['amenities']) :
     </main>
 
     <script>
-     const addImageButton = document.getElementById("addImageButton");
-    const imageInput = document.getElementById("imageInput");
-    const gallery = document.querySelector(".gallery");
-    let uploadedFiles = [];
+      
+      
+      const addImageButton = document.getElementById("addImageButton");
+const imageInput = document.getElementById("imageInput");
+const gallery = document.querySelector(".gallery");
+let uploadedFiles = [];
 
-    // Handle image addition
-    addImageButton.addEventListener("click", () => imageInput.click());
+const roomForm = document.getElementById("roomForm");
 
-    // Handle file selection
-    imageInput.addEventListener("change", function(event) {
-        const files = event.target.files;
-        
-        Array.from(files).forEach(file => {
-            if (!file.type.startsWith('image/')) {
-                alert('Please upload only image files.');
-                return;
-            }
+// Function to validate text fields (no numbers only)
+function validateTextField(value, fieldName) {
+    // Check if empty
+    if (!value.trim()) {
+        return `${fieldName} is required.`;
+    }
+    
+    // Check if contains only numbers
+    if (/^\d+$/.test(value)) {
+        return `${fieldName} cannot contain only numbers.`;
+    }
+    
+    return '';
+}
 
-            const imageContainer = document.createElement("div");
-            imageContainer.className = "image-container";
+// Function to validate numeric fields
+function validateNumericField(value, fieldName) {
+    // Check if empty
+    if (!value) {
+        return `${fieldName} is required.`;
+    }
+    
+    // Check if negative
+    if (parseFloat(value) < 0) {
+        return `${fieldName} cannot be negative.`;
+    }
+    
+    return '';
+}
 
-            const reader = new FileReader();
-            reader.onload = function(e) {
-                const img = document.createElement("img");
-                img.src = e.target.result;
-                img.style.width = "150px";
-                img.style.height = "150px";
-                img.style.objectFit = "cover";
-                img.style.borderRadius = "5px";
-                imageContainer.appendChild(img);
+// Main validation function
+function validateForm() {
+    let errors = [];
+    
+    // Get form fields
+    const description = document.getElementById('description').value;
+    const detailedDescription = document.getElementById('detaileddescription').value;
+    const bedType = document.getElementById('bed_type').value;
+    const price = document.getElementById('price').value;
+    const capacity = document.getElementById('capacity').value;
+    
+    // Validate text fields
+    const descError = validateTextField(description, 'Room Description');
+    if (descError) errors.push(descError);
+    
+    const detailError = validateTextField(detailedDescription, 'Detailed Description');
+    if (detailError) errors.push(detailError);
+    
+    const bedError = validateTextField(bedType, 'Bed Type');
+    if (bedError) errors.push(bedError);
+    
+    // Validate numeric fields
+    const priceError = validateNumericField(price, 'Room Price');
+    if (priceError) errors.push(priceError);
+    
+    const capacityError = validateNumericField(capacity, 'Room Capacity');
+    if (capacityError) errors.push(capacityError);
+    
+    // Display errors if any
+    const errorMsg = document.getElementById("uploadError");
+    if (errors.length > 0) {
+        errorMsg.textContent = errors.join('\n');
+        errorMsg.style.display = 'block';
+        return false;
+    }
+    
+    errorMsg.style.display = 'none';
+    return true;
+}
 
-                const removeButton = document.createElement("button");
-                removeButton.className = "remove-image";
-                removeButton.innerHTML = '<i class="fas fa-times"></i>';
-                removeButton.onclick = function() {
-                    const index = uploadedFiles.indexOf(file);
-                    if (index > -1) {
-                        uploadedFiles.splice(index, 1);
-                    }
-                    imageContainer.remove();
-                };
-                imageContainer.appendChild(removeButton);
-            };
-            reader.readAsDataURL(file);
-
-            uploadedFiles.push(file);
-            gallery.insertBefore(imageContainer, addImageButton);
-        });
+// Replace the existing form submit event listener with this updated version
+roomForm.addEventListener("submit", function(event) {
+    event.preventDefault();
+    
+    // Perform validation
+    if (!validateForm()) {
+        return;
+    }
+    
+    const formData = new FormData(this);
+    
+    // Append all uploaded files to FormData
+    uploadedFiles.forEach((file, index) => {
+        formData.append('roomphotos[]', file);
     });
 
-    // Handle form submission
-    document.getElementById("roomForm").addEventListener("submit", function(event) {
-        event.preventDefault();
-        
-        const formData = new FormData(this);
-        
-        // Add uploaded files to form data
-        uploadedFiles.forEach((file, index) => {
-            formData.append('roomphotos[]', file);
-        });
-
-        // Add existing photos that weren't removed
-        const existingPhotos = [];
-        document.querySelectorAll('.image-container img[src^="../"]').forEach(img => {
-            if (!img.parentElement.classList.contains('removed')) {
-                existingPhotos.push(img.getAttribute('src').replace('../', ''));
-            }
-        });
-        formData.append('existing_photos', existingPhotos.join(','));
-
-        // Submit form
-        fetch('../routes/routes.php', {
-            method: 'POST',
-            body: formData
-        })
-        .then(response => response.json())
-        .then(data => {
-            if (data.success) {
-                const successMsg = document.getElementById("uploadSuccess");
-                successMsg.textContent = data.message;
-                successMsg.style.display = 'block';
-                
-                setTimeout(() => {
-                    window.location.href = 'AdminRooms.php';
-                }, 1500);
-            } else {
-                const errorMsg = document.getElementById("uploadError");
-                errorMsg.textContent = data.message || 'Edited';
-                errorMsg.style.display = 'block';
-            }
-        })
-        .catch(error => {
-            console.error('Error:', error);
+    // Submit form data with images
+    fetch('../routes/routes.php', {
+        method: 'POST',
+        body: formData
+    })
+    .then(response => response.json())
+    .then(data => {
+        if (data.success) {
+            // Show success message
+            const successMsg = document.getElementById("uploadSuccess");
+            successMsg.textContent = data.message;
+            successMsg.style.display = 'block';
+            
+            // Clear the gallery after successful upload
+            const imageContainers = document.querySelectorAll('.image-container');
+            imageContainers.forEach(container => container.remove());
+            uploadedFiles = [];
+            
+            // Reset the form
+            document.getElementById("roomForm").reset();
+            
+            // Redirect to AdminRooms.php
+            setTimeout(function() {
+                window.location.href = 'AdminRooms.php';
+            }, 2000);
+        } else {
+            // Show error message
             const errorMsg = document.getElementById("uploadError");
-            errorMsg.textContent = 'Edited';
+            errorMsg.textContent = data.message;
             errorMsg.style.display = 'block';
-        });
+        }
+    })
+    .catch(error => {
+        console.error('Error:', error);
+        const errorMsg = document.getElementById("uploadError");
+        errorMsg.textContent = 'Failed to upload images.';
+        errorMsg.style.display = 'block';
+    });
+});
+
+// Handle image addition
+addImageButton.addEventListener("click", () => imageInput.click());
+
+// Handle file selection
+imageInput.addEventListener("change", function(event) {
+    const files = event.target.files;
+    
+    Array.from(files).forEach(file => {
+        if (!file.type.startsWith('image/')) {
+            alert('Please upload only image files.');
+            return;
+        }
+
+        const imageContainer = document.createElement("div");
+        imageContainer.className = "image-container";
+
+        const reader = new FileReader();
+        reader.onload = function(e) {
+            const img = document.createElement("img");
+            img.src = e.target.result;
+            img.style.width = "150px";
+            img.style.height = "150px";
+            img.style.objectFit = "cover";
+            img.style.borderRadius = "5px";
+            imageContainer.appendChild(img);
+
+            const removeButton = document.createElement("button");
+            removeButton.className = "remove-image";
+            removeButton.innerHTML = '<i class="fas fa-times"></i>';
+            removeButton.onclick = function() {
+                const index = uploadedFiles.indexOf(file);
+                if (index > -1) {
+                    uploadedFiles.splice(index, 1);
+                }
+                imageContainer.remove();
+            };
+            imageContainer.appendChild(removeButton);
+        };
+        reader.readAsDataURL(file);
+
+        uploadedFiles.push(file);
+        gallery.insertBefore(imageContainer, addImageButton);
+    });
+});
+
+// Handle form submission
+document.getElementById("roomForm").addEventListener("submit", function(event) {
+    event.preventDefault();
+    
+    const formData = new FormData(this);
+    
+    // Add validation check
+    if (!validateForm(formData)) {
+        return; // Stop form submission if validation fails
+    }
+    
+    // Add uploaded files to form data
+    uploadedFiles.forEach((file, index) => {
+        formData.append('roomphotos[]', file);
     });
 
-    // Handle existing image removal
-    document.querySelectorAll('.remove-image').forEach(button => {
-        button.addEventListener('click', function(e) {
-            e.preventDefault();
-            const container = this.parentElement;
-            container.classList.add('removed');
-            container.style.display = 'none';
-        });
+    // Add existing photos that weren't removed
+    const existingPhotos = [];
+    document.querySelectorAll('.image-container img[src^="../"]').forEach(img => {
+        if (!img.parentElement.classList.contains('removed')) {
+            existingPhotos.push(img.getAttribute('src').replace('../', ''));
+        }
     });
+    formData.append('existing_photos', existingPhotos.join(','));
+
+    // Submit form
+    fetch('../routes/routes.php', {
+        method: 'POST',
+        body: formData
+    })
+    .then(response => response.json())
+    .then(data => {
+        if (data.success) {
+            const successMsg = document.getElementById("uploadSuccess");
+            successMsg.textContent = data.message;
+            successMsg.style.display = 'block';
+            
+            setTimeout(() => {
+                window.location.href = 'AdminRooms.php';
+            }, 1500);
+        } else {
+            const errorMsg = document.getElementById("uploadError");
+            errorMsg.textContent = data.message || 'Edited';
+            errorMsg.style.display = 'block';
+        }
+    })
+    .catch(error => {
+        console.error('Error:', error);
+        const errorMsg = document.getElementById("uploadError");
+        errorMsg.textContent = 'Edited';
+        errorMsg.style.display = 'block';
+    });
+});
+
+// Handle existing image removal
+document.querySelectorAll('.remove-image').forEach(button => {
+    button.addEventListener('click', function(e) {
+        e.preventDefault();
+        const container = this.parentElement;
+        container.classList.add('removed');
+        container.style.display = 'none';
+    });
+});
 </script>
 
 

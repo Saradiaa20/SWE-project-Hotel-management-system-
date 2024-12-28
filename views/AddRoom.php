@@ -340,6 +340,17 @@
                 <input type="hidden" name="uploaded_images" id="uploadedImages" value="">
 
                 <div class="form-group">
+                    <label for="description">Room Description</label>
+                    <input type="text" id="description" name="description"required>
+                </div>
+
+                
+                <div class="form-group">
+                    <label for="detaileddescription">Detailed Description</label>
+                    <input type="text" id="detaileddescription" name="detaileddescription"required>
+                </div>
+                
+                <div class="form-group">
                     <label for="price">Room Price</label>
                     <input type="number" id="price" name="price" placeholder="Price per night" required>
                 </div>
@@ -413,6 +424,133 @@
     </main>
 
     <script>
+      const roomForm = document.getElementById("roomForm");
+
+// Function to validate text fields (no numbers only)
+function validateTextField(value, fieldName) {
+    // Check if empty
+    if (!value.trim()) {
+        return `${fieldName} is required.`;
+    }
+    
+    // Check if contains only numbers
+    if (/^\d+$/.test(value)) {
+        return `${fieldName} cannot contain only numbers.`;
+    }
+    
+    return '';
+}
+
+// Function to validate numeric fields
+function validateNumericField(value, fieldName) {
+    // Check if empty
+    if (!value) {
+        return `${fieldName} is required.`;
+    }
+    
+    // Check if negative
+    if (parseFloat(value) < 0) {
+        return `${fieldName} cannot be negative.`;
+    }
+    
+    return '';
+}
+
+// Main validation function
+function validateForm() {
+    let errors = [];
+    
+    // Get form fields
+    const description = document.getElementById('description').value;
+    const detailedDescription = document.getElementById('detaileddescription').value;
+    const bedType = document.getElementById('bed_type').value;
+    const price = document.getElementById('price').value;
+    const capacity = document.getElementById('capacity').value;
+    
+    // Validate text fields
+    const descError = validateTextField(description, 'Room Description');
+    if (descError) errors.push(descError);
+    
+    const detailError = validateTextField(detailedDescription, 'Detailed Description');
+    if (detailError) errors.push(detailError);
+    
+    const bedError = validateTextField(bedType, 'Bed Type');
+    if (bedError) errors.push(bedError);
+    
+    // Validate numeric fields
+    const priceError = validateNumericField(price, 'Room Price');
+    if (priceError) errors.push(priceError);
+    
+    const capacityError = validateNumericField(capacity, 'Room Capacity');
+    if (capacityError) errors.push(capacityError);
+    
+    // Display errors if any
+    const errorMsg = document.getElementById("uploadError");
+    if (errors.length > 0) {
+        errorMsg.textContent = errors.join('\n');
+        errorMsg.style.display = 'block';
+        return false;
+    }
+    
+    errorMsg.style.display = 'none';
+    return true;
+}
+
+// Replace the existing form submit event listener with this updated version
+roomForm.addEventListener("submit", function(event) {
+    event.preventDefault();
+    
+    // Perform validation
+    if (!validateForm()) {
+        return;
+    }
+    
+    const formData = new FormData(this);
+    
+    // Append all uploaded files to FormData
+    uploadedFiles.forEach((file, index) => {
+        formData.append('roomphotos[]', file);
+    });
+
+    // Submit form data with images
+    fetch('../routes/routes.php', {
+        method: 'POST',
+        body: formData
+    })
+    .then(response => response.json())
+    .then(data => {
+        if (data.success) {
+            // Show success message
+            const successMsg = document.getElementById("uploadSuccess");
+            successMsg.textContent = data.message;
+            successMsg.style.display = 'block';
+            
+            // Clear the gallery after successful upload
+            const imageContainers = document.querySelectorAll('.image-container');
+            imageContainers.forEach(container => container.remove());
+            uploadedFiles = [];
+            
+            // Reset the form
+            document.getElementById("roomForm").reset();
+            
+            // Redirect to AdminRooms.php
+            setTimeout(function() {
+                window.location.href = 'AdminRooms.php';
+            }, 2000);
+        } else {
+            // Show error message
+            const errorMsg = document.getElementById("uploadError");
+            errorMsg.textContent = data.message;
+            errorMsg.style.display = 'block';
+        }
+    })
+    .catch(error => {
+        console.error('Error:', error);
+        const errorMsg = document.getElementById("uploadError");
+        errorMsg.textContent = 'Failed to upload images.';
+        errorMsg.style.display = 'block';
+    });
+});
       
    const addImageButton = document.getElementById("addImageButton");
 const imageInput = document.getElementById("imageInput");
@@ -478,55 +616,7 @@ imageInput.addEventListener("change", function(event) {
     });
 });
 
-document.getElementById("roomForm").addEventListener("submit", function(event) {
-    event.preventDefault();
-    
-    const formData = new FormData(this);
-    
-    // Append all uploaded files to FormData
-    uploadedFiles.forEach((file, index) => {
-        formData.append('roomphotos[]', file);
-    });
 
-    // Submit form data with images
-    fetch('../routes/routes.php', {
-        method: 'POST',
-        body: formData
-    })
-    .then(response => response.json())
-    .then(data => {
-        if (data.success) {
-            // Show success message
-            const successMsg = document.getElementById("uploadSuccess");
-            successMsg.textContent = data.message;
-            successMsg.style.display = 'block';
-            
-            // Clear the gallery after successful upload
-            const imageContainers = document.querySelectorAll('.image-container');
-            imageContainers.forEach(container => container.remove());
-            uploadedFiles = [];
-            
-            // Reset the form
-            document.getElementById("roomForm").reset();
-            
-            // Redirect to AdminRooms.php
-            setTimeout(function() {
-                window.location.href = 'AdminRooms.php';
-            }, 2000); // Wait for 2 seconds before redirecting
-        } else {
-            // Show error message
-            const errorMsg = document.getElementById("uploadError");
-            errorMsg.textContent = data.message;
-            errorMsg.style.display = 'block';
-        }
-    })
-    .catch(error => {
-        console.error('Error:', error);
-        const errorMsg = document.getElementById("uploadError");
-        errorMsg.textContent = 'Failed to upload images.';
-        errorMsg.style.display = 'block';
-    });
-});
 
 </script>
 

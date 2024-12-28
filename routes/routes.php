@@ -49,6 +49,13 @@ case 'createRoom':
                     echo json_encode(['success' => false, 'message' => 'Room ID not provided.']);
                 }
                 break;
+                case 'viewRoom':
+                    if (isset($_GET['id'])) {
+                        require_once('../views/roomDetails.php');
+                    } else {
+                        echo json_encode(['success' => false, 'message' => 'Room ID not provided.']);
+                    }
+                    break;
         
         default:
             echo json_encode(['success' => false, 'message' => 'Invalid action.']);
