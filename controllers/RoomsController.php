@@ -168,5 +168,7 @@ public function updateRoom($id, $data) {
     }
 }
 
-    
+    public function getAvailableRooms() {
+    return $this->roomModel->getAvailableRooms();
+}
 }
