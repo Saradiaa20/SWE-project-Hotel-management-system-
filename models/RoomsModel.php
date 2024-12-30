@@ -1,4 +1,5 @@
 <?php
+require_once(__DIR__ . '/../config/config.php');
 
 class Room {
     private $db;
@@ -107,6 +108,14 @@ class Room {
     $stmt->bindParam(':id', $id, PDO::PARAM_INT);
     return $stmt->execute();
 }
-   
+   public function getAvailableRooms() {
+    try {
+        $stmt = $this->pdo->prepare("SELECT * FROM rooms WHERE reservation_status != 'Reserved'");
+        $stmt->execute();
+        return ['success' => true, 'data' => $stmt->fetchAll(PDO::FETCH_ASSOC)];
+    } catch (PDOException $e) {
+        return ['success' => false, 'message' => $e->getMessage()];
+    }
+}
     
 }
