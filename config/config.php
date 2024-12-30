@@ -3,7 +3,7 @@
 define('DB_HOST', 'localhost');
 define('DB_USER', 'root');
 define('DB_PASS', '');
-define('DB_NAME', 'hotel_managment');
+define('DB_NAME', 'hotel_management_test2');
 
 // Create a connection to the database
 try {
